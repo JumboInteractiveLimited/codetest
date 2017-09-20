@@ -15,6 +15,7 @@ func baseHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(fileContents)
 }
 
+// This probably needs work too
 func main() {
 	r := mux.NewRouter()
 	log.Println("Waiting...")

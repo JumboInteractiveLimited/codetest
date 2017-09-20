@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of draws</title>
+</head>
+<body>
+
+{{ range $key, $value := .Results }}
+<li><a href="/key/{{ $value.Key }}">{{ $value.Name }}</a></li>
+{{ end }}
+
+</body>
+</html>
