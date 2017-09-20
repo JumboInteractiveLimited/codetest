@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// Cache caches another Fetchers results
+// Cache caches another Fetchers results - if more complex data feed, or larger data set, an ARC mechanism might be useful. E.g. hashicorps
 type Cache struct {
 	sync.RWMutex
 	Feed   Fetcher
