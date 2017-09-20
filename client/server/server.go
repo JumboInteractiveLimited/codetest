@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"path/filepath"
+	"sort"
 )
 
 // HTML is the server type for HTML
@@ -28,6 +29,11 @@ func (s HTML) List(w http.ResponseWriter, r *http.Request) {
 		s.Error500(w, err, "")
 		return
 	}
+
+	// Sort alphabetically
+	sort.Slice(res, func(i, j int) bool {
+		return res[i].Name < res[j].Name
+	})
 
 	t, err := template.ParseFiles(filepath.Join(s.TemplatePath, "list.html.tmpl"))
 	if err != nil {
