@@ -13,7 +13,9 @@ import (
 )
 
 func main() {
-	logger := logrus.Logger{}
+	// Pass a logger around for centralized logging if necessary
+	logger := logrus.New()
+
 	// Viper allows us to migrate to YAML or TOML files fairly easily
 	pflag.String("templatePath", "templates", "The path to the templates directory")
 	pflag.String("feedServerPath", "http://127.0.0.1:80/", "The feed server address")
@@ -26,6 +28,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Bind the passed in config to local variables
 	templatePath := viper.GetString("templatePath")
 	feedServerPath := viper.GetString("feedServerPath")
 	bindTo := viper.GetString("bindTo")
@@ -39,9 +42,9 @@ func main() {
 	}
 
 	// Prepare a Draws fetcher for use by the HTML server
-	fetcher := draws.NewLiveFeed(feedServerPath)
+	fetcher := draws.NewLiveFeed(feedServerPath, logger)
 	if cacheFeed {
-		fetcher = draws.NewCachedFeed(fetcher)
+		fetcher = draws.NewCachedFeed(fetcher, logger)
 	}
 
 	// Prepare a server and register its methods as handlers. if more complicated, I'd utilize a framework.

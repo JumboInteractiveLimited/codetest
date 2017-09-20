@@ -2,14 +2,17 @@ package draws
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"sync"
+	"time"
 )
 
 // Cache caches another Fetchers results
 type Cache struct {
 	sync.RWMutex
-	Feed  Fetcher
-	Cache map[string]Result
+	Feed   Fetcher
+	Cache  map[string]Result
+	Logger *logrus.Logger
 }
 
 // Update updates the cache
@@ -24,6 +27,16 @@ func (c Cache) Update() error {
 	}
 	c.Unlock()
 	return nil
+}
+
+// Monitor ticks every 30 seconds to trigger a cache update. This could be done with a retry-backoff algorithm as well.
+func (c Cache) Monitor() {
+	for range time.Tick(time.Second * 30) {
+		err := c.Update()
+		if err != nil {
+			c.Logger.Error(err)
+		}
+	}
 }
 
 // GetAll returns all Results in the cache
@@ -48,11 +61,13 @@ func (c Cache) ByKey(key string) (res Result, err error) {
 }
 
 // NewCachedFeed returns a cached feed fetcher
-func NewCachedFeed(feed Fetcher) Fetcher {
+func NewCachedFeed(feed Fetcher, logger *logrus.Logger) Fetcher {
 	c := Cache{
-		Cache: map[string]Result{},
-		Feed:  feed,
+		Cache:  map[string]Result{},
+		Feed:   feed,
+		Logger: logger,
 	}
 	c.Update()
+	go c.Monitor()
 	return c
 }
