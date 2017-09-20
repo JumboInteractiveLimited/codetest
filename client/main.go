@@ -48,12 +48,19 @@ func main() {
 	}
 
 	// Prepare a server and register its methods as handlers. if more complicated, I'd utilize a framework.
+	server.RegisterLogger(logger)
 	s := server.HTML{
 		Fetcher:             fetcher,
 		TemplatePath:        templatePath,
 		ParsedErrorTemplate: t,
 	}
-	http.HandleFunc("/", s.List)
-	http.HandleFunc("/key/", s.Key)
-	http.ListenAndServe(bindTo, nil)
+
+	h := http.NewServeMux()
+	h.HandleFunc("/", s.List)
+	h.HandleFunc("/key/", s.Key)
+	logger.Infof("Listening on: %s", bindTo)
+	err = http.ListenAndServe(bindTo, server.Logger(h))
+	if err != nil {
+		logger.WithError(err).Errorf("Error binding to: %s", bindTo)
+	}
 }

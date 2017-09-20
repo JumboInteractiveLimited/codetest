@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/fromz/codetest/client/draws"
+	"github.com/sirupsen/logrus"
 	"html/template"
 	"net/http"
 	"path/filepath"
@@ -15,6 +16,7 @@ type HTML struct {
 	// TODO implement a cache for parsed templates, with a goroutine monitoring either inotify refreshing the templates, or every x seconds rebuild
 	TemplatePath        string
 	ParsedErrorTemplate *template.Template
+	Logger              *logrus.Logger
 }
 
 // ListData is the data for the List template
@@ -26,7 +28,7 @@ type ListData struct {
 func (s HTML) List(w http.ResponseWriter, r *http.Request) {
 	res, err := s.Fetcher.GetAll()
 	if err != nil {
-		s.Error500(w, err, "")
+		s.Error500(w, r, err, "")
 		return
 	}
 
@@ -37,7 +39,7 @@ func (s HTML) List(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.ParseFiles(filepath.Join(s.TemplatePath, "list.html.tmpl"))
 	if err != nil {
-		s.Error500(w, err, "")
+		s.Error500(w, r, err, "")
 		return
 	}
 
@@ -57,7 +59,7 @@ func (s HTML) Key(w http.ResponseWriter, r *http.Request) {
 	key := r.URL.Path[len("/key/"):]
 	res, err := s.Fetcher.ByKey(key)
 	if err != nil {
-		s.Error500(w, err, "")
+		s.Error500(w, r, err, "")
 		return
 	}
 
@@ -65,7 +67,7 @@ func (s HTML) Key(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.ParseFiles(filepath.Join(s.TemplatePath, "by-key.html.tmpl"))
 	if err != nil {
-		s.Error500(w, err, "")
+		s.Error500(w, r, err, "")
 		return
 	}
 
@@ -81,7 +83,8 @@ type ErrorData struct {
 }
 
 // Error500 renders the error 500 template
-func (s HTML) Error500(w http.ResponseWriter, err error, msg string) {
+func (s HTML) Error500(w http.ResponseWriter, r *http.Request, err error, msg string) {
+	s.Logger.WithError(err).Errorf("Serving URL %s", r.URL.Path)
 	s.ParsedErrorTemplate.Execute(w, ErrorData{
 		Message: msg,
 	})

@@ -38,3 +38,8 @@ ln -s `pwd`/hooks/pre-commit .git/hooks
 ```bash
 go get -v ./... && go build -v
 ```
+
+# Running the client
+Available in client/ dir. `go run main.go` will use defaults that work on most systems, otherwise arguments are available.
+* `/` is a list that links to the key/ template
+* `/key/RESULT.KEY`
