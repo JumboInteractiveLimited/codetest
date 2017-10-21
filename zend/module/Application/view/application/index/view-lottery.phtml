@@ -1,0 +1,65 @@
+<div class="panel panel-default">
+    <div class="panel-heading">Games</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->ticket->getGames() as $game) : ?>
+            <tr>
+                <td><?php echo $game->name; ?></td>
+                <td><?php echo $game->description; ?></td>
+                <td>
+                    <a href="<?php echo $this->url('home',
+                            array('action' => 'view-game', 'key' => $this->ticket->key,
+                                'key2' => $game->key)); ?>"
+                       class="btn btn-default">
+                        View
+                    </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Draws</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Draw Number</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Stop</th>
+                <th>Prize Pool</th>
+                <th>Jackpot Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->ticket->getDraws() as $draw) : ?>
+            <tr>
+                <td><?php echo $draw->drawNumber; ?></td>
+                <td><?php echo $draw->name; ?></td>
+                <td><?php echo $draw->date->format('d/m/Y g:ia'); ?></td>
+                <td><?php echo $draw->stop->format('d/m/Y g:ia'); ?></td>
+                <td>
+                    <?php
+                    $fmt = new NumberFormatter('en_AU', NumberFormatter::CURRENCY);
+                    echo $fmt->format($draw->prizePool->amount) . ' ' . $draw->prizePool->currency;
+                    ?>
+                </td>
+                <td>
+                    <img src="<?php echo $draw->jackpotImage->imageUrl; ?>"
+                         width="<?php echo $draw->jackpotImage->imageWidth; ?>"
+                         height="<?php echo $draw->jackpotImage->imageHeight; ?>"
+                         title="<?php echo $draw->jackpotImage->contentDescription; ?>" />
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>

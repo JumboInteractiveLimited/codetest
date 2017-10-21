@@ -1,0 +1,36 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><?php echo $this->ticket->name; ?></div>
+    <table class="table">
+        <tr>
+            <th>Type:</th>
+            <td><?php echo $this->ticket->type; ?></td>
+            <th>Auto-playable:</th>
+            <td><?php echo $this->ticket->autoplayable; ?></td>
+            <?php if ($this->ticket instanceof Application\Model\Ticket\LotteryTicket) : ?>
+            <th>Days:</th>
+            <td>
+                <?php
+                $days = $this->ticket->getDays();
+                array_walk($days, function($i, $k) {
+                    printf("%s: %s<br />\n", $i->name, $i->value);
+                });
+                ?>
+            </td>
+            <th>Quickpick Sizes:</th>
+            <td><?php echo implode(', ', $this->ticket->quickpickSizes); ?></td>
+            <?php endif; ?>
+        </tr>
+    </table>
+</div>
+<?php
+if ($this->ticket instanceof Application\Model\Ticket\LotteryTicket) {
+    echo $this->partial('view-lottery.phtml', array(
+        'ticket' => $this->ticket,
+    ));
+} elseif ($this->ticket instanceof Application\Model\Ticket\RaffleTicket) {
+    echo $this->partial('view-raffle.phtml', array(
+        'ticket' => $this->ticket,
+    ));
+}
+?>
+<a href="<?php echo $this->url('home'); ?>" class="btn btn-default">Home</a>

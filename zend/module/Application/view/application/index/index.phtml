@@ -1,0 +1,22 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->tickets as $ticket) : ?>
+    <tr>
+        <td><?php echo $ticket->name; ?></td>
+        <td><?php echo $ticket->type; ?></td>
+        <td>
+            <a href="<?php echo $this->url('home',
+                    array('action' => 'view', 'key' => $ticket->key)); ?>"
+               class="btn btn-default">View</a>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

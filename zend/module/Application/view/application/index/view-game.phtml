@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <?php echo $this->ticket->name; ?> - <?php echo $this->game->name; ?> Game
+    </div>
+    <div class="panel panel-body">
+        <p><?php echo $this->game->description; ?></p>
+    </div>
+</div>
+<?php if (count($this->game->getOffers())) : ?>
+<div class="panel panel-default">
+    <div class="panel-heading">Offers</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->game->getOffers() as $offer) : ?>
+            <tr>
+                <td><?php echo $offer->name; ?></td>
+                <td><?php echo $offer->description; ?></td>
+                <td>
+                    <a href="<?php echo $this->url('home',
+                            array('action' => 'view-offer', 'key' => $this->ticket->key,
+                                'key2' => $this->game->key, 'key3' => $offer->key)); ?>"
+                       class="btn btn-default">
+                        View
+                    </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<?php endif; ?>
+<a href="<?php echo $this->url('home',
+        array('action' => 'view', 'key' => $this->ticket->key)); ?>" class="btn btn-default">Back</a>
+<a href="<?php echo $this->url('home'); ?>" class="btn btn-default">Home</a>

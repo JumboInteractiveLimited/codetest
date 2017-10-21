@@ -1,0 +1,215 @@
+<div class="panel panel-default">
+    <div class="panel panel-heading">
+        <?php echo $this->ticket->lottery->name; ?>
+    </div>
+    <table class="table">
+        <tr>
+            <th>Description:</th>
+            <td><?php echo $this->ticket->lottery->description; ?></td>
+            <th>Multidraw</th>
+            <td>
+                <?php echo $this->ticket->lottery->multidraw ? 'Yes' : 'No'; ?>
+            </td>
+            <th>Type:</th>
+            <td><?php echo $this->ticket->lottery->type; ?></td>
+            <th>Lottery ID:</th>
+            <td><?php echo $this->ticket->lottery->lotteryID; ?></td>
+        </tr>
+        <tr>
+            <th>Icon:</th>
+            <td colspan="7">
+                <img src="<?php echo $this->ticket->lottery->iconUrl; ?>"
+                     title="<?php echo $this->ticket->lottery->iconUrl; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <th>White Icon:</th>
+            <td colspan="7">
+                <img src="<?php echo $this->ticket->lottery->iconWhiteUrl; ?>"
+                     title="<?php echo $this->ticket->lottery->iconWhiteUrl; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <th>Play:</th>
+            <td colspan="7">
+                <a href="<?php echo $this->ticket->lottery->playUrl; ?>" target="_blank">
+                    <?php echo $this->ticket->lottery->playUrl; ?>
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="panel panel-default">
+    <div class="panel panel-heading">
+        Draw
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Terms &amp; Conditions</th>
+                <th>Date</th>
+                <th>Stop</th>
+                <th>Draw Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?php echo $this->ticket->draw->name; ?></td>
+                <td><?php echo $this->ticket->draw->description; ?></td>
+                <td>
+                    <a href="<?php echo $this->ticket->draw->termsCondsUrl; ?>"
+                       target="_blank">
+                        <?php echo $this->ticket->draw->termsCondsUrl; ?>
+                    </a>
+                </td>
+                <td>
+                    <?php echo $this->ticket->draw->date->format('d/m/Y g:ia'); ?>
+                </td>
+                <td>
+                    <?php echo $this->ticket->draw->stop->format('d/m/Y g:ia'); ?>
+                </td>
+                <td><?php echo $this->ticket->draw->drawNumber; ?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="panel panel-default">
+    <div class="panel panel-heading">
+        Prize
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Card Title</th>
+                <th>Value</th>
+                <th>Value Is Exact</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?php echo $this->ticket->draw->prize->name; ?></td>
+                <td><?php echo $this->ticket->draw->prize->description; ?></td>
+                <td><?php echo $this->ticket->draw->prize->type; ?></td>
+                <td><?php echo $this->ticket->draw->prize->cardTitle; ?></td>
+                <td>
+                    <?php
+                    $fmt = new NumberFormatter('en_AU', NumberFormatter::CURRENCY);
+                    echo $fmt->format($this->ticket->draw->prize->value->amount)
+                            . ' ' . $this->ticket->draw->prize->value->currency;
+                    ?>
+                </td>
+                <td>
+                    <?php echo $this->ticket->draw->prize->valueIsExact ? 'Yes' : 'No'; ?>
+                </td>
+            </tr>
+            <tr>
+                <th>Hero Image</th>
+                <td colspan="5">
+                    <?php if ($this->ticket->draw->prize->heroImage) : ?>
+                    <img src="<?php echo $this->ticket->draw->prize->heroImage; ?>"
+                         title="<?php echo $this->ticket->draw->prize->heroImage; ?>" />
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <tr>
+                <th>Carousel Images</th>
+                <td colspan="5">
+                    <?php if ($this->ticket->draw->prize->carouselImages) :
+                        foreach ($this->ticket->draw->prize->carouselImages as $image) : ?>
+                    <img src="<?php echo $image; ?>"
+                         title="<?php echo $image; ?>" />
+                    <?php endforeach;
+                    endif; ?>
+                </td>
+            </tr>
+            <tr>
+                <th>Feature Draw Image</th>
+                <td colspan="5">
+                    <?php if ($this->ticket->draw->prize->featureDrawImage) : ?>
+                    <img src="<?php echo $this->ticket->draw->prize->featureDrawImage; ?>"
+                         title="<?php echo $this->ticket->draw->prize->featureDrawImage; ?>" />
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <tr>
+                <th>EDM Image</th>
+                <td colspan="5">
+                    <?php if ($this->ticket->draw->prize->edmImage) : ?>
+                    <img src="<?php echo $this->ticket->draw->prize->edmImage; ?>"
+                         title="<?php echo $this->ticket->draw->prize->edmImage; ?>" />
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <tr>
+                <th>Details</th>
+                <td colspan="5">
+                    <h3><?php echo $this->ticket->draw->prize->content->salesPitchHeading1; ?></h3>
+                    <h4><?php echo $this->ticket->draw->prize->content->salesPitchSubHeading1; ?></h4>
+                    <p><?php echo $this->ticket->draw->prize->content->paragraph1; ?></p>
+                    <p><?php echo $this->ticket->draw->prize->content->paragraph2; ?></p>
+                    <p><?php echo $this->ticket->draw->prize->content->paragraph3; ?></p>
+                    <img src="<?php echo $this->ticket->draw->prize->content->image; ?>"
+                         title="<?php echo $this->ticket->draw->prize->content->image; ?>" />
+                    <h3><?php echo $this->ticket->draw->prize->content->salesPitchHeading2; ?></h3>
+                    <h4><?php echo $this->ticket->draw->prize->content->salesPitchSubHeading2; ?></h4>
+                    <h5>Features:</h5>
+                    <p>
+                        <?php foreach ($this->ticket->draw->prize->content->features as $feature) : ?>
+                        <?php echo $feature; ?><br />
+                        <?php endforeach; ?>
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="panel panel-default">
+    <div class="panel panel-heading">
+        Offers
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Number of Tickets</th>
+                <th>Price</th>
+                <th>Price per Ticket</th>
+                <th>Ribbon</th>
+                <th>Bonus Prize</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->ticket->draw->getOffers() as $offer) : ?>
+            <tr>
+                <td><?php echo $offer->name; ?></td>
+                <td><?php echo $offer->numTickets; ?></td>
+                <td>
+                    <?php
+                    $fmt = new NumberFormatter('en_AU', NumberFormatter::CURRENCY);
+                    echo $fmt->format($offer->price->amount)
+                            . ' ' . $offer->price->currency;
+                    ?>
+                </td>
+                <td>
+                    <?php
+                    $fmt = new NumberFormatter('en_AU', NumberFormatter::CURRENCY);
+                    echo $fmt->format($offer->pricePerTicket->amount)
+                            . ' ' . $offer->pricePerTicket->currency;
+                    ?>
+                </td>
+                <td><?php echo $offer->ribbon; ?></td>
+                <td>
+                    <?php echo $offer->bonusPrize->description; ?>
+                    <img src="<?php echo $offer->bonusPrize->image; ?>"
+                         title="<?php echo $offer->ponusPrize->image; ?>" />
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
