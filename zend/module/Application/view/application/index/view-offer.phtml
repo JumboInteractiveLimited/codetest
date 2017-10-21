@@ -1,0 +1,116 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <?php echo $this->ticket->name; ?> - <?php echo $this->game->name; ?> Game
+        - <?php echo $this->offer->name; ?> Offer
+    </div>
+    <div class="panel panel-body">
+        <p><?php echo $this->offer->description; ?></p>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Price</th>
+                <th>Min Games</th>
+                <th>Max Games</th>
+                <th>Multiple</th>
+                <th>Ordered</th>
+                <th>Game Increments</th>
+                <th>Equivalent Games</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <?php
+                    $fmt = new NumberFormatter('en_AU', NumberFormatter::CURRENCY);
+                    echo $fmt->format($this->offer->price->amount)
+                        . $this->offer->price->currency;
+                    ?>
+                </td>
+                <td><?php echo $this->offer->minGames; ?></td>
+                <td><?php echo $this->offer->maxGames; ?></td>
+                <td><?php echo $this->offer->multiple; ?></td>
+                <td><?php echo $this->offer->ordered ? 'Yes' : 'No'; ?></td>
+                <td>
+                    <?php
+                    array_walk($this->offer->gameIncrements, function($i, $k) {
+                        printf("%s: %s<br />\n", $k, $i);
+                    });
+                    ?>
+                </td>
+                <td><?php echo $this->offer->equivalentGames; ?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<?php if (count($this->offer->numberSets)) : ?>
+<div class="panel panel-default">
+    <div class="panel panel-heading">
+        Number Sets
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First</th>
+                <th>Last</th>
+                <th>Sets</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->offer->numberSets as $numberSet) : ?>
+            <tr>
+                <td><?php echo $numberSet->first; ?></td>
+                <td><?php echo $numberSet->last; ?></td>
+                <td>
+                    <?php
+                    array_walk($numberSet->sets, function($i, $k) {
+                        printf("%s (%s)<br />\n", $i->name, $i->count);
+                    });
+                    ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<?php endif; ?>
+<?php if (count($this->offer->combinations)) : ?>
+<div class="panel panel-default">
+    <div class="panel panel-heading">
+        Combinations
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Combination</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->offer->combinations as $key => $combination) : ?>
+            <tr>
+                <td><?php echo $key; ?></td>
+                <td><?php echo implode(', ', $combination); ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<?php endif; ?>
+<?php if (count($this->offer->displayRange)) : ?>
+<div class="panel panel-default">
+    <div class="panel panel-heading">
+        Display Range
+    </div>
+    <div class="panel panel-body">
+        <p><?php echo implode(', ', $this->offer->displayRange); ?></p>
+    </div>
+</div>
+<?php endif; ?>
+<a href="<?php echo $this->url('home',
+        array('action' => 'view-game', 'key' => $this->ticket->key,
+            'key2' => $this->game->key)); ?>" class="btn btn-default">Back</a>
+<a href="<?php echo $this->url('home',
+        array('action' => 'view', 'key' => $this->ticket->key)); ?>"
+   class="btn btn-default">Back to Ticket</a>
+<a href="<?php echo $this->url('home'); ?>" class="btn btn-default">Home</a>
